@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, type Resolver } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
@@ -46,9 +46,12 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     formState: { errors, isSubmitting },
     reset,
   } = useForm<SignUpFormValues>({
-    //FIXME: Find a solution for the resolver type error
-    //@ts-ignore
-    resolver: zodResolver(signUpSchema),
+    // Cast is a safe workaround for a known Zod v4 <-> @hookform/resolvers typing mismatch.
+    // It doesn't affect runtime behavior and can be removed once types align.
+    resolver:
+      (zodResolver as unknown as (schema: unknown) => Resolver<SignUpFormValues>)(
+        signUpSchema,
+      ),
 
     defaultValues: {
       name: '',
