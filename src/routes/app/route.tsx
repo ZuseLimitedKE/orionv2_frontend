@@ -1,7 +1,14 @@
 // THIS IS THE LAYOUT FILE FOR THE /app directory don't remove it
-import { Outlet, createFileRoute } from '@tanstack/react-router'
+import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
+import { getSession } from '@/integrations/auth/auth-client'
 export const Route = createFileRoute('/app')({
   component: AppLayoutComponent,
+  beforeLoad: async () => {
+    const session = await getSession()
+    if (!session.data) {
+      throw redirect({ to: '/login' })
+    }
+  },
 })
 
 function AppLayoutComponent() {
