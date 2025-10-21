@@ -23,6 +23,7 @@ import { signIn } from '@/integrations/auth/auth-client'
 import { toast } from 'sonner'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Spinner } from './ui/spinner'
+import { PasswordInput } from './password-input'
 
 const loginSchema = z.object({
   email: z.email({ message: 'Please enter a valid email address' }),
@@ -136,16 +137,12 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input
+                <PasswordInput
                   id="password"
-                  type="password"
+                  placeholder="••••••••"
                   {...register('password')}
+                  error={errors.password?.message}
                 />
-                {errors.password && (
-                  <p className="text-sm text-red-500">
-                    {errors.password.message}
-                  </p>
-                )}
               </Field>
 
               {/* Submit */}
