@@ -3,13 +3,7 @@ import { useForm, type Resolver } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Field,
   FieldDescription,
@@ -20,6 +14,8 @@ import { Input } from '@/components/ui/input'
 import { signUp } from '@/integrations/auth/auth-client'
 import { toast } from 'sonner'
 import { Link, useNavigate } from '@tanstack/react-router'
+import { Spinner } from './ui/spinner'
+import { PasswordInput } from './password-input'
 
 const signUpSchema = z
   .object({
@@ -48,10 +44,9 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   } = useForm<SignUpFormValues>({
     // Cast is a safe workaround for a known Zod v4 <-> @hookform/resolvers typing mismatch.
     // It doesn't affect runtime behavior and can be removed once types align.
-    resolver:
-      (zodResolver as unknown as (schema: unknown) => Resolver<SignUpFormValues>)(
-        signUpSchema,
-      ),
+    resolver: (
+      zodResolver as unknown as (schema: unknown) => Resolver<SignUpFormValues>
+    )(signUpSchema),
 
     defaultValues: {
       name: '',
@@ -92,13 +87,9 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     <Card {...props}>
       <CardHeader>
         <CardTitle>Create an account</CardTitle>
-        <CardDescription>
-          Enter your information below to create your account
-        </CardDescription>
       </CardHeader>
-
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="name">Full Name</FieldLabel>
@@ -128,38 +119,36 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input id="password" type="password" {...register('password')} />
+              <PasswordInput
+                id="password"
+                placeholder="••••••••"
+                {...register('password')}
+                error={errors.password?.message}
+              />
               <FieldDescription>
                 Must be at least 8 characters long.
               </FieldDescription>
-              {errors.password && (
-                <p className="text-sm text-red-500">
-                  {errors.password.message}
-                </p>
-              )}
             </Field>
 
             <Field>
               <FieldLabel htmlFor="confirmPassword">
                 Confirm Password
               </FieldLabel>
-              <Input
+              <PasswordInput
                 id="confirmPassword"
-                type="password"
                 {...register('confirmPassword')}
+                error={errors.confirmPassword?.message}
               />
-              <FieldDescription>Please confirm your password.</FieldDescription>
-              {errors.confirmPassword && (
-                <p className="text-sm text-red-500">
-                  {errors.confirmPassword.message}
-                </p>
-              )}
             </Field>
 
             <FieldGroup>
               <Field>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? 'Creating...' : 'Create Account'}
+                <Button
+                  type="submit"
+                  className="font-semibold"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? <Spinner /> : 'Create Account'}
                 </Button>
                 <Button variant="outline" disabled type="button">
                   Sign up with Google
