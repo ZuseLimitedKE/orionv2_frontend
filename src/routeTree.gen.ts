@@ -15,6 +15,7 @@ import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppMarketplaceRouteImport } from './routes/app/marketplace'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
+import { Route as AppAdminRouteImport } from './routes/app/admin'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -46,12 +47,18 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/sign-up': typeof SignUpRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/marketplace': typeof AppMarketplaceRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/sign-up': typeof SignUpRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/marketplace': typeof AppMarketplaceRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/sign-up': typeof SignUpRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/marketplace': typeof AppMarketplaceRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/sign-up'
+    | '/app/admin'
     | '/app/dashboard'
     | '/app/marketplace'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/sign-up'
+    | '/app/admin'
     | '/app/dashboard'
     | '/app/marketplace'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/sign-up'
+    | '/app/admin'
     | '/app/dashboard'
     | '/app/marketplace'
   fileRoutesById: FileRoutesById
@@ -150,15 +162,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
   }
 }
 
 interface AppRouteRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppMarketplaceRoute: typeof AppMarketplaceRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppMarketplaceRoute: AppMarketplaceRoute,
 }
